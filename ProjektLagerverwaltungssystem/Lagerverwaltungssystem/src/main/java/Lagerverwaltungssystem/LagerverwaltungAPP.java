@@ -45,12 +45,12 @@ public class LagerverwaltungAPP extends Application {
         TextArea resultArea = new TextArea();
         resultArea.setEditable(false);
 
-        // TextArea für Serverinformationen
+        // TextArea für Serverinformationen - bisher noch nicht funktionsfähig
         TextArea serverKommunikation = new TextArea();
         serverKommunikation.setEditable(false);
         serverKommunikation.setPromptText("Serverinformationen ...");
 
-        // 2) Sichtbarkeit der Felder steuern
+        // Bedienbarkeit der Text-Felder steuern, je nach ausgewählter Operation
         opBox.getSelectionModel().selectedItemProperty().addListener((obs, oldOp, newOp) -> {
             nameField.setDisable(true);
             priceField.setDisable(true);
@@ -58,15 +58,15 @@ public class LagerverwaltungAPP extends Application {
 
             switch (newOp) {
                 case READ, DEL ->          {/* nur ID */}
-                case UPDATE, NEW -> {
+                case UPDATE, NEW -> {        // Feld Preis und Feld Name freigeben
                     priceField.setDisable(false);
                     if (newOp == Message.Op.NEW) nameField.setDisable(false);
                 }
-                case ADD, SUB -> qtyField.setDisable(false);
+                case ADD, SUB -> qtyField.setDisable(false); // Feld Menge freigeben
             }
         });
 
-        // Dropdown-Auswahl der durchzuführenden Operationen
+        // Dropdown-Auswahl (GridPane) der durchzuführenden Operationen
         GridPane form = new GridPane();
         form.setHgap(10); form.setVgap(10);
         form.add(new Label("Operation:"), 0, 0); form.add(opBox,    1, 0);
@@ -76,15 +76,15 @@ public class LagerverwaltungAPP extends Application {
         form.add(new Label("Menge:"),     0, 4); form.add(qtyField, 1, 4);
         form.add(executeBtn,              1, 5);
 
-        // erstes TextArea
+        // erstes TextArea für Informationen zu Bestandsänderungen
         VBox root = new VBox(10, form, resultArea, serverKommunikation);
         root.setPadding(new Insets(15));
 
 
-        // Button-Handler
+        // Button-Handler bei betätigen des Schalters
         executeBtn.setOnAction(e -> {
             try {
-                // Extraktion von Operation + Parameter aus den TextFields
+                // Extraktion von Operation + Parameter aus den TextFields die in der GUI eingetragen wurden
                 String op       = opBox.getValue().name().toLowerCase();
                 String id   = idField.getText().trim();
                 String name     = nameField.getText().trim();
@@ -92,25 +92,26 @@ public class LagerverwaltungAPP extends Application {
                 String qty   = qtyField.getText().trim();
 
                 // Baue dein Parameter-Array
-                List<String> params = new ArrayList<>();
+                List<String> list = new ArrayList<>();
 
                 // ID wird an dieser Stelle jedem Listenwert übergeben
-                params.add(id);
+                list.add(id);
+                
                 switch (op) {
                     case "update" -> {
                         if(price.isBlank()){
                             resultArea.setText("Bitte Preis angeben.");
                             return;
                         }
-                        params.add(price);        // update braucht ID + Preis
+                        list.add(price);        // update braucht ID + Preis
                     }
                     case "new" -> {
                         if(name.isBlank() || price.isBlank()){
                             resultArea.setText("Bitte Name und/ oder Preis angeben.");
                             return;
                         }
-                        params.add(name);         // … und den Namen
-                        params.add(price);        // new braucht ID + Preis …
+                        list.add(name);         // … und den Namen
+                        list.add(price);        // new braucht ID + Preis …
 
                     }
                     case "add", "subtract", "s", "sub" -> {
@@ -118,19 +119,21 @@ public class LagerverwaltungAPP extends Application {
                             resultArea.setText("Bitte gültige Menge angeben.");
                             return;
                         }
-                        params.add(qty);          // add/subtract braucht ID + Menge
+                        list.add(qty);          // add/subtract braucht ID + Menge
                     }
-                    // read und delete brauchen nur ID
                 }
 
 
+    
+                // neuer Thread erstellt, der die Informationen der Text-Area übergibt 
+                // Informationen werden in Text-Area angezeigt
                 new Thread(() -> {
                     try (Socket sock = new Socket("localhost", 50000);
                          BufferedReader in  = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                          PrintWriter    out = new PrintWriter(sock.getOutputStream(), true)) {
 
                         String result = ArtikelClient.executeOnce(op,
-                                params.toArray(new String[0]), in, out);
+                                list.toArray(new String[0]), in, out);
 
                         Platform.runLater(() -> resultArea.setText(result));
 
@@ -145,7 +148,7 @@ public class LagerverwaltungAPP extends Application {
             }
         });
 
-
+        // Weitere Angaben zur Benutzeroberfläche
         primaryStage.setScene(new Scene(root, 400, 350));
         primaryStage.setTitle("Lagerverwaltung GUI");
         primaryStage.show();
