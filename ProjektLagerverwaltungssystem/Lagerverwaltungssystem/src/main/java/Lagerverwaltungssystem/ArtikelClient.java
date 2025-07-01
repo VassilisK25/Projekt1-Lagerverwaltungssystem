@@ -30,6 +30,9 @@ public class ArtikelClient {
         }
     }
 
+    // Methode, um Informationen der Text-Area zu übergeben
+    // Parameter sind: die Message-Informationen, ein BufferedReader zum lesen des InputStreams
+    //                 
     public static String executeOnce(String op,
                                      String[] parameters,
                                      BufferedReader in,
@@ -40,14 +43,14 @@ public class ArtikelClient {
             return "Ungültige Operation oder falsche Parameter.";
         }
 
-        // Antwort einlesen
+        // Antwort einlesen und deserialisieren
         var raw = in.readLine();
         var message = deserialize(raw);
+        // Informationen in StringFormat übertragen
         return message.info != null ? message.info : message.artikel.toString();
     }
 
-
-
+    // Methode, die die möglichen Operationen verwaltet
     public static boolean benutzerAktionen(String op, String[] args, PrintWriter out) {
         try {
             switch (op) {
