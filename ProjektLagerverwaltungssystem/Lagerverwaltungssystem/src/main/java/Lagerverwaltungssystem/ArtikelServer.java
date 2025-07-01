@@ -27,12 +27,15 @@ public class ArtikelServer {
         load();
     }
 
+    // Server-Start-Routine  -- Socket für Datenempfang und /-versendung wird gesetzt
     public void startServer() {
         try (var serverSocket = new ServerSocket(port)) {
             System.out.println("ArtikelServer gestartet ...");
             pool = Executors.newCachedThreadPool();
             while (true) {
                 var socket = serverSocket.accept();
+                // Pool wird erzeugt und Handlerobjekt übergeben
+                // Ermöglicht es dem Server mehrere asynchrone Aufgaben zu erledigen
                 pool.execute(new Handler(socket));
             }
         } catch (IOException e) {
@@ -48,11 +51,14 @@ public class ArtikelServer {
             this.socket = socket;
         }
 
+        // Start des eigentlichen Programms 
         @Override
         public void run() {
+            // Herstellen der Verbindung
             SocketAddress socketAddress = socket.getRemoteSocketAddress();
             System.out.println("Verbindung zu " + socketAddress + " hergestellt");
 
+            // Auslesen der erhaltenen Message
             try (var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                  var out = new PrintWriter(socket.getOutputStream(), true)) {
 
@@ -75,6 +81,8 @@ public class ArtikelServer {
             }
         }
 
+        // durchführen der jeweiligen Operation hierbei wird direkt eine Message erzeugt
+        // und serialisiert, die direkt an den Client zurückgesendet wird
         private void read(int id, PrintWriter out) {
             var artikel = map.get(id);
             var message = new Message();
