@@ -1,0 +1,9 @@
+Das Programm funktioniert wie folgt:
+- bei öffnen des Codes in einer Java Entwicklungsumgebung sollten zunächst die Maven-Dependencies geladen werden
+- um JavaFX einbinden zu können muss die aktuelle Version geladen werden
+- in der Run-Konfiguration muss in den VM-Optionen ein Pfad für JavaFX hinterlegt werden
+- danach sollte das Programm laufen --- dabei muss lediglich das Programm Lagerverwaltungsapp.java gestartet werden
+- Server und Client werden beim Programmstart im Port "50000" und als "localhost" aufgerufen
+
+Die Datei Projekt_Skizze.pdf verdeutlicht nochmals den groben Aufbau des Programms. Die Lagerverwaltungsapp jetzt dabei auf das
+Clientprogramm auf
