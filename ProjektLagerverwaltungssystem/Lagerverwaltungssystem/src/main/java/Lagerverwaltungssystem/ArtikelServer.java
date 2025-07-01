@@ -24,7 +24,7 @@ public class ArtikelServer {
 
     public ArtikelServer(int port) {
         this.port = port;
-        load(); // ✅ Excel-Daten beim Start einlesen
+        load();
     }
 
     public void startServer() {
@@ -171,23 +171,29 @@ public class ArtikelServer {
         }
 
     }
-
+    // load-Methode wird beim Start des Servers aufgerufen und die
+    // Informationen der referenzierten Excel-Datei ausgelesen
     private void load() {
         map = new HashMap<>();
         String dateipfad = "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx";
 
+        // im InputStream werden die Daten ausgelesen
+        // dabei wird ein Objekt vom Typ Workbook erzeugt, dass speziell zum Arbeiten
+        // mit Excel-Formaten verwendet wird
         try (FileInputStream fis = new FileInputStream(dateipfad);
             Workbook workbook = new XSSFWorkbook(fis)) {
 
+            // Durchlauf der Excel-Sheet, wobei die Kopfzeile übersprungen wird
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
-                if (row.getRowNum() == 0) continue; // Kopfzeile überspringen
+                if (row.getRowNum() == 0) continue;
 
                 Cell idCell = row.getCell(0);
                 Cell nameCell = row.getCell(1);
                 Cell preisCell = row.getCell(2);
                 Cell mengeCell = row.getCell(3);
 
+                // ist eines der notwendigen Felder leer, wird die Zeile überprungen
                 if (idCell == null || nameCell == null || preisCell == null|| mengeCell == null) continue;
 
                 int id = (int) idCell.getNumericCellValue();
@@ -195,6 +201,7 @@ public class ArtikelServer {
                 int menge = (int) mengeCell.getNumericCellValue();
                 double preis = preisCell.getNumericCellValue();
 
+                // Artikel-Informationen werden innerhalb einer Map-Struktur gespeichert
                 map.put(id, new Artikel(id, name, menge, preis));
             }
 
@@ -206,6 +213,7 @@ public class ArtikelServer {
         }
     }
 
+    // Methode um Änderungen in der Excel persistent zu speichern
     private void speichereExcel(String dateiname) {
         System.out.println("Excel wird gespeichert.");
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -236,6 +244,7 @@ public class ArtikelServer {
         }
     }
 
+    // Methode um sämtliche Aktivitäten zu protokollieren
     private void protokollDatei(Artikel artikel, String aktion, String logDatei) throws IOException {
         System.out.println("Änderungen werden protokolliert.");
         try {
