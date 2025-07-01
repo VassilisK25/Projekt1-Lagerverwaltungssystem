@@ -29,8 +29,10 @@ public class LagerverwaltungAPP extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        // Aufruf der Start-Methoden im Client und im Server
         new Thread(() -> new ArtikelServer(port).startServer()).start();
-
+        new Thread(() -> new ArtikelClient(port, host).startClient()).start();
+        
         ChoiceBox<Message.Op> opBox = new ChoiceBox<>(FXCollections.observableArrayList(Message.Op.values()));
         opBox.getSelectionModel().select(Message.Op.READ);
 
