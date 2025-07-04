@@ -18,7 +18,7 @@ public class ArtikelClient {
         this.host = host;
     }
     
-    private void startClient(String host, int port) {
+    public void startClient(String host, int port) {
         try (var socket = new Socket(host, port);
              var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              var out = new PrintWriter(socket.getOutputStream(), true);
