@@ -17,7 +17,7 @@ public class ArtikelClient {
         this.port = port;
         this.host = host;
     }
-    
+
     public void startClient(String host, int port) {
         try (var socket = new Socket(host, port);
              var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -32,7 +32,7 @@ public class ArtikelClient {
 
     // Methode, um Informationen der Text-Area zu übergeben
     // Parameter sind: die Message-Informationen, ein BufferedReader zum lesen des InputStreams
-    //                 
+    //
     public static String executeOnce(String op,
                                      String[] parameters,
                                      BufferedReader in,
@@ -134,13 +134,13 @@ public class ArtikelClient {
         message.artikel = artikel;
         out.println((serialize(message)));
     }
-    
+
     // Serialisierung der zu übermittelnden Informationen in JSON-Format
     private static String serialize(Message message) {
         var jsonb = JsonbBuilder.create();
         return jsonb.toJson(message);
     }
-    
+
     // Deserialisierung der Informationen aus erhaltenem JSON-Format
     private static Message deserialize(String data) {
         var jsonb = JsonbBuilder.create();
