@@ -32,7 +32,7 @@ public class LagerverwaltungAPP extends Application {
         // Aufruf der Start-Methoden im Client und im Server
         new Thread(() -> new ArtikelServer(port).startServer()).start();
         new Thread(() -> new ArtikelClient(port, host).startClient(host, port)).start();
-        
+
         ChoiceBox<Message.Op> opBox = new ChoiceBox<>(FXCollections.observableArrayList(Message.Op.values()));
         opBox.getSelectionModel().select(Message.Op.READ);
 
@@ -96,7 +96,7 @@ public class LagerverwaltungAPP extends Application {
 
                 // ID wird an dieser Stelle jedem Listenwert übergeben
                 list.add(id);
-                
+
                 switch (op) {
                     case "update" -> {
                         if(price.isBlank()){
@@ -124,8 +124,8 @@ public class LagerverwaltungAPP extends Application {
                 }
 
 
-    
-                // neuer Thread erstellt, der die Informationen der Text-Area übergibt 
+
+                // neuer Thread erstellt, der die Informationen der Text-Area übergibt
                 // Informationen werden in Text-Area angezeigt
                 new Thread(() -> {
                     try (Socket sock = new Socket("localhost", 50000);
