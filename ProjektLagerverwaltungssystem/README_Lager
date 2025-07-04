@@ -4,6 +4,7 @@ Das Programm funktioniert wie folgt:
 - in der Run-Konfiguration muss in den VM-Optionen ein Pfad für JavaFX hinterlegt werden
 - danach sollte das Programm laufen --- dabei muss lediglich das Programm Lagerverwaltungsapp.java gestartet werden
 - Server und Client werden beim Programmstart im Port "50000" und als "localhost" aufgerufen
+- die beiden Exceldateien befinden sich im Ordner resources
 
 Die Datei Projekt_Skizze.pdf verdeutlicht nochmals den groben Aufbau des Programms. Die Lagerverwaltungsapp jetzt dabei auf das
 Clientprogramm auf
