@@ -4,6 +4,7 @@ import jakarta.json.bind.JsonbBuilder;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -21,6 +22,9 @@ public class ArtikelServer {
     private final int port;
     private Map<Integer, Artikel> map;
     private ExecutorService pool;
+    // Dateien werden aus Ordner resources bezogen
+    String eingabeDatei = Paths.get("Lagerhaltung.xlsx").toAbsolutePath().toString();
+    String logDatei = Paths.get("Protokolldatei_Lager.xlsx").toAbsolutePath().toString();
 
     public ArtikelServer(int port) {
         this.port = port;
@@ -51,7 +55,7 @@ public class ArtikelServer {
             this.socket = socket;
         }
 
-        // Start des eigentlichen Programms 
+        // Start des eigentlichen Programms
         @Override
         public void run() {
             // Herstellen der Verbindung
@@ -102,8 +106,8 @@ public class ArtikelServer {
             } else {
                 artikel.setPreis(preis);
                 message.info = "Artikel " + id + " wurde geändert";
-                speichereExcel("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx");
-                protokollDatei(artikel, "Update", "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Protokolldatei_Lager.xlsx");
+                speichereExcel(eingabeDatei);
+                protokollDatei(artikel, "Update", logDatei);
 
             }
             out.println(serialize(message));
@@ -119,8 +123,8 @@ public class ArtikelServer {
                 Artikel neuerArtikel = new Artikel(id, name, menge, preis);
                 map.put(id, neuerArtikel);
                 message.info = "Neuer Artikel " + id + " wurde hinzugefügt.";
-                speichereExcel("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx");
-                protokollDatei(map.get(id), "Neuer Artikel", "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Protokolldatei_Lager.xlsx");
+                speichereExcel(eingabeDatei);
+                protokollDatei(map.get(id), "Neuer Artikel", logDatei);
             }
             out.println(serialize(message));
         }
@@ -133,15 +137,15 @@ public class ArtikelServer {
                 if (artikel.getMenge() < menge){
                     message.info = "Es wird die maximale Menge in Höhe von " + artikel.getMenge() + " ausgegeben.";
                     artikel.setMenge(0);
-                    speichereExcel("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Protokolldatei_Lager.xlsx");
+                    speichereExcel(eingabeDatei);
                 } else if(artikel.getMenge() == 0){
                     message.info = "Bestand von Artikel " + id + " ist leer.";
                 }else{
                     artikel.setMenge(artikel.getMenge() - menge);
                     message.info = "Artikel " + id + " wurde geändert";
                     message.info = "Restmenge von " + id + " beträgt " + artikel.getMenge();
-                    speichereExcel("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx");
-                    protokollDatei(artikel, "Entnahme", "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Protokolldatei_Lager.xlsx");
+                    speichereExcel(eingabeDatei);
+                    protokollDatei(artikel, "Entnahme", logDatei);
 
                 }
             }
@@ -157,8 +161,8 @@ public class ArtikelServer {
                 artikel.setMenge(artikel.getMenge() + menge);
                 message.info = "Artikel " + id + " wurde geändert.";
                 message.info = "Artikel " + id + " Menge neu: " + artikel.getMenge();
-                speichereExcel("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx");
-                protokollDatei(artikel, "Hinzufügen", "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Protokolldatei_Lager.xlsx");
+                speichereExcel(eingabeDatei);
+                protokollDatei(artikel, "Hinzufügen", logDatei);
             }
             out.println(serialize(message));
         }
@@ -170,10 +174,8 @@ public class ArtikelServer {
             } else{
                 map.remove(id);
                 message.info = "Artikel " + id + " wurde erfolgreich gelöscht.";
-                speichereExcel("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx");
-                protokollDatei(artikel, "Löschung", "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Protokolldatei_Lager.xlsx");
-                //speichereProtokoll("C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung_Protokoll.xlsx");
-
+                speichereExcel(eingabeDatei);
+                protokollDatei(artikel, "Löschung", logDatei);
             }
             out.println(serialize(message));
         }
@@ -183,13 +185,12 @@ public class ArtikelServer {
     // Informationen der referenzierten Excel-Datei ausgelesen
     private void load() {
         map = new HashMap<>();
-        String dateipfad = "C:\\Users\\vassi\\Desktop\\Projekte_Bewerbung\\ProjektLagerverwaltungssystem\\Lagerhaltung.xlsx";
 
         // im InputStream werden die Daten ausgelesen
         // dabei wird ein Objekt vom Typ Workbook erzeugt, dass speziell zum Arbeiten
         // mit Excel-Formaten verwendet wird
-        try (FileInputStream fis = new FileInputStream(dateipfad);
-            Workbook workbook = new XSSFWorkbook(fis)) {
+        try (FileInputStream fis = new FileInputStream(eingabeDatei);
+             Workbook workbook = new XSSFWorkbook(fis)) {
 
             // Durchlauf der Excel-Sheet, wobei die Kopfzeile übersprungen wird
             Sheet sheet = workbook.getSheetAt(0);
