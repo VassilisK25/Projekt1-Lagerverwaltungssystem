@@ -1,0 +1,16 @@
+Zur Ergänzung der Runtime Komponente kann folgender Schritt unternommen werden:
+ --> HamburgerSymbol oben links
+ --> Run aus der Leiste auswählen
+ --> Edit Run-Configurations
+ --> neue Konfiguration "Application" anlegen
+ --> Java-JDK auswählen
+ --> übergeordneten Programmordner auswählen "Lagerverwaltungssystem"
+ --> Modify options auswählen
+ --> Add VM-Options auswählen
+ --> in die neue Spalte folgendes Eintragen:
+        --module-path <Pfad zur JavaFX-Installation> --add-modules=javafx.controls,javafx.fxml
+ --> Main-class auswählen
+
+ --> Apply drücken
+
+ --> Programm testen, indem LagerverwaltungsAPP gestartet wird
