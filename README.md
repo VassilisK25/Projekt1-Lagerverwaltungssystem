@@ -19,4 +19,5 @@ In diesem Repository sind einige der Projekte, die ich in 2025 bearbeitet habe, 
                       Funktionen: 
                            - Eingabemaske die komplett ausgefüllt werden muss. 
                            - Kreditwürdigkeit wird überprüft. 
-                           - Antwort beinhaltet neben der Bestätigung/ Abweisung auch Informationen wieso es ggf. zur Abweisung kam. 
+                           - Antwort beinhaltet neben der Bestätigung/ Abweisung auch Informationen wieso es ggf. zur Abweisung kam.
+                           - Zu jedem Profil sollen auch Scans (z.B. für Personalausweise) gespeichert werden.
