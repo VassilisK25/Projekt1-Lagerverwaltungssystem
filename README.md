@@ -1,6 +1,5 @@
 +++++ Projekt 1:      Das erste Projekt ist ein Lagerverwaltungssystem, das eine Client-Server-Architektur realisiert, auf die eine 
                       Graphical User Interface aufsetzt und über TCP kommuniziert. Der Server übernimmt die Verwaltung des Lagerbestandes 
-                      und der Änderungshistorie. Wobei sämtliche Informationen in Exceldateien verwalten werden. Der Client beinhaltet die 
                       Anfragelogik. Die Operationen des Clients beinhalten folgendes: 
                           - Informationsabfrage nach ID
                           - Erweitern/ Einschränken des Sortiments
