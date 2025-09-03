@@ -23,8 +23,9 @@ public class ArtikelServer {
     private Map<Integer, Artikel> map;
     private ExecutorService pool;
     // Dateien werden aus Ordner resources bezogen
-    String eingabeDatei = Paths.get("Lagerhaltung.xlsx").toAbsolutePath().toString();
-    String logDatei = Paths.get("Protokolldatei_Lager.xlsx").toAbsolutePath().toString();
+    String eingabeDatei = Paths.get("ProjektLagerverwaltungssystem/resources/Lagerhaltung.xlsx").toAbsolutePath().toString();
+
+    String logDatei = Paths.get("ProjektLagerverwaltungssystem/resources/Protokolldatei_Lager.xlsx").toAbsolutePath().toString();
 
     public ArtikelServer(int port) {
         this.port = port;
