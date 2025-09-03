@@ -8,7 +8,7 @@ Zur Ergänzung der Runtime Komponente kann folgender Schritt unternommen werden:
  --> Modify options auswählen
  --> Add VM-Options auswählen
  --> in die neue Spalte folgendes Eintragen:
-        --module-path <Pfad zur JavaFX-Installation> --add-modules=javafx.controls,javafx.fxml
+        --module-path C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2025.1.2\javafx-sdk-24.0.1 --add-modules=javafx.controls,javafx.fxml
  --> Main-class auswählen
 
  --> Apply drücken
